@@ -47,9 +47,10 @@ app.post('/farms',async(req,res)=>{
 
 // now linkig farm to product
 
-app.get('/farms/:id/products/New',(req,res)=>{
+app.get('/farms/:id/products/New',async(req,res)=>{
     const {id}=req.params;
-    res.render('products/New',{id})
+    const farm=await Farm.findById(id);
+    res.render('products/New',{farm})
 })
 
 app.post('/farms/:id/products',async(req,res)=>{//The : defines a route parameter, and id is the name of that parameter.
