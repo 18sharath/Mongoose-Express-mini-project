@@ -7,14 +7,14 @@ const farmschema=Schema({
         required:[true,'farm must have a name']
     },
     city:String,
-    emial:{
+    email:{
         type:String,
         required:[true,'email requird']
     },
-    products:{
+    products:[{
         type:Schema.Types.ObjectId,
         ref:'Product'
-    }
+    }]
 
 })
 const Farm=mongoose.model('Farm',farmschema);

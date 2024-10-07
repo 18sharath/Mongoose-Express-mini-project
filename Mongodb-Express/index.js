@@ -32,12 +32,39 @@ app.get('/farms/new',(req,res)=>{
     res.render('farms/new');
 })
 
+app.get('/farms/:id',async(req,res)=>{
+    const {id}=req.params;
+    const farm=await Farm.findById(id).populate('products')
+    console.log(farm);
+    res.render('farms/show',{farm});
+})
+
 app.post('/farms',async(req,res)=>{
     // res.send(req.body);
     const farm=new Farm(req.body);
     await farm.save();
 })
 
+// now linkig farm to product
+
+app.get('/farms/:id/products/New',(req,res)=>{
+    const {id}=req.params;
+    res.render('products/New',{id})
+})
+
+app.post('/farms/:id/products',async(req,res)=>{//The : defines a route parameter, and id is the name of that parameter.
+    const {id}=req.params;
+    const farm=await Farm.findById(id);
+    const {name,price,category}=req.body;
+    const product=new Product({name,price,category});
+    farm.products.push(product);
+    product.farm=farm;
+    await farm.save();
+    await product.save();
+    // res.send(farm);
+    res.redirect(`/farms/${farm._id}`);
+
+})
 
 
 // product
