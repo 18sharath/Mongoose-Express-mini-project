@@ -3,9 +3,10 @@ const app=express()
 const path=require('path')
 const mongoose=require('mongoose')
 const Product = require('./models/product')
+const Farm=require('./models/farm'); // we are going to do for one to many relationship
 const methodOverride=require('method-override')
 app.use(methodOverride('_method')); // because we usinf post method hence in form submission post not put hence we should use this
-mongoose.connect('mongodb://localhost:27017/farmStand')
+mongoose.connect('mongodb://localhost:27017/farmStandTakeTwo')
    .then(() => {
       console.log("COnnection open connected to mongo");
    })
@@ -20,6 +21,26 @@ app.set('view engine','ejs');
 /*Look in the views directory (set by app.set('views', ...)) for a file named index.ejs.
 Use the EJS engine (set by app.set('view engine', 'ejs')) to render the file.
 Send the rendered HTML back as the response.*/
+
+// farm
+app.get('/farms',async(req,res)=>{
+    const farm=await Farm.find({});
+    res.render('farms/index',{farm})
+})
+
+app.get('/farms/new',(req,res)=>{
+    res.render('farms/new');
+})
+
+app.post('/farms',async(req,res)=>{
+    // res.send(req.body);
+    const farm=new Farm(req.body);
+    await farm.save();
+})
+
+
+
+// product
 app.get('/products',async(req,res)=>{
     const products=await Product.find({})
     // console.log(products);
